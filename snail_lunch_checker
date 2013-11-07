@@ -1,0 +1,82 @@
+# -*- coding:gbk -*-
+import datetime
+import smtplib
+import urllib
+import logging
+from bs4 import BeautifulSoup
+from email.mime.text import MIMEText
+from email.header import Header
+
+logging.basicConfig(filename="dc.log", level=logging.INFO, datefmt="%(asctime)s - %(levelname)s: %(message)s")
+
+
+
+check_lst = [{'name':"真实姓名1", 'email': ['邮箱1']}, {'name':"真实姓名2", 'email':['邮箱2']},]
+
+##获取当日菜单
+def getMenu():
+  url = "http://192.168.1.104/dc/dc.asp"
+  conn = urllib.urlopen(url, urllib.urlencode(data))
+  content = conn.read()
+  content = content.decode('gbk')
+  soup = BeautifulSoup(content)
+  menu = soup.select("#menulist")
+  print menu
+
+
+
+##获取订餐查询结果
+def check(name="默认查询姓名", today = 1, todday = 0, toddday = 0, todddday = 0):
+  url = "http://192.168.1.104/dc/search.asp"
+  data = {'name': name,
+          'lunchList': 1, 
+          'dinnerList': 1, 
+          'today': today, 
+          'todday': todday,
+          'toddday': toddday,
+          'todddday': todddday,
+          'Submit': '开始查询',}
+  day = data['today']+data['todday'] + data['toddday'] + data['todddday']
+  conn = urllib.urlopen(url, urllib.urlencode(data))
+  content = conn.read()
+  content = content.decode('gbk')
+  soup = BeautifulSoup(content)
+  tables = soup.find_all('table')
+  order = tables[1:day+1]
+  rslt = ''
+  for i in order:
+    tr = i.find_all('tr')[2:]
+    for ii in tr:
+      rslt += datetime.datetime.now().strftime("%Y-%m-%d ")
+      td = ii.findAll('td')
+      td = [t.text.strip() for t in td]
+      rslt += " ".join(td)
+    rslt += "\n"
+  return rslt.encode('utf8')
+
+##发送邮件
+def msg(mail_to = ['test@test.com'], name = '默认查询姓名'):
+  content = check(name)
+  today = datetime.datetime.now().strftime("%Y-%m-%d ")
+  mail_host = "smtp邮箱服务器"
+  mail_user = "smtp账号"
+  mail_pswd = "smtp密码"
+  mail_postfix="smtp邮箱后辍"
+
+  msg = MIMEText(content, "plain", "utf8")
+  msg['Accept-Charset'] = "ISO-8859-1,utf-8"
+  msg['Subject'] = today + u'订餐记录'
+  msg['From'] = "%s <%s>" % (Header(u"订餐记录" , "utf-8"), mail_user)
+  msg['to'] = ";".join(mail_to)
+  try:
+    s = smtplib.SMTP()
+    s.connect(mail_host)
+    s.login(mail_user, mail_pswd)
+    s.sendmail(mail_user, mail_to, msg.as_string())
+    s.close()
+    logging.info(u"发送成功, %s: %s" % (name.decode('gbk'), content.decode('utf8')))
+  except Exception, e:
+    logging.info(u"发送失败, %s: %s" % (name.decode('gbk'), e))
+
+for i in check_lst:
+  msg(i['email'], i['name'])
