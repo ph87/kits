@@ -93,7 +93,7 @@ if __name__ == '__main__':
     while 1:
       data, addr = udps.recvfrom(1024)
       p=DNSQuery(data)
-      name - p.domain.strip('.')
+      name = p.domain.strip('.')
       resolved_ip = dns_table.get(name) or gethost(name=name, iface=iface) or ip
       udps.sendto(p.respuesta(resolved_ip), addr)
       print 'Request: %s -> %s' % (p.domain.strip('.'), resolved_ip)
