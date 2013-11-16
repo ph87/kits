@@ -1,5 +1,3 @@
-"edit in master branch
-"this is for master branch
 set shiftwidth=4
 set tabstop=4
 set expandtab
