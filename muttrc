@@ -1,0 +1,62 @@
+set imap_user=$EMAIL_ADDRESS
+set imap_pass="`security find-generic-password -w -s FounderComicsMail -a $EMAIL_ADDRESS`"
+set spoolfile=imaps://imap.gmail.com:993/INBOX
+set folder=imaps://imap.gmail.com:993
+set postponed="imaps://imap.gmail.com:993/[Gmail]/草稿"
+set realname=""
+set from=$EMAIL_ADDRESS
+
+ignore "Authentication-Results:"
+
+set smtp_url=$SMTP_URL
+set smtp_pass="`security find-generic-password -w -s FounderComicsMail -a "$EMAIL_ADDRESS"`"
+
+set header_cache="~/.mutt/cache/headers"
+set message_cachedir="~/.mutt/cache/bodies"
+set certificate_file="~/.mutt/.mutt_certificates"
+
+set metoo=yes
+set sig_dashes=no
+set sig_on_top=yes
+set signature="~/.mutt/signature"
+set alias_file="~/.mutt/alias"
+set sort_aux='reverse-last-date-received'
+set pager_index_lines=4
+set timeout=3
+set mail_check=900
+set imap_keepalive=300
+set imap_idle
+set imap_check_subscribed
+
+source ~/.mutt/hooks
+source ~/.mutt/alias
+
+color status yellow black    
+color indicator white blue 
+color hdrdefault magenta default 
+color attachment yellow default 
+color quoted green default 
+color tilde white default 
+color tree cyan default 
+color message white default 
+color signature white default 
+color error magenta default 
+color normal    default default
+
+bind index gg first-entry
+bind index G last-entry
+bind index zt current-top
+bind index zm current-middle
+bind index zb current-bottom
+bind index,pager d save-message
+
+bind pager j previous-page
+bind pager k next-page
+bind pager J previous-unread
+bind pager K next-unread
+
+# Gmail-style
+macro index,pager gi "<change-folder>=INBOX<enter>" "Go to inbox" 
+macro index,pager ga "<change-folder>=[Gmail]/所有邮件<enter>" "Go to all mail" 
+macro index,pager gs "<change-folder>=[Gmail]/已加星标<enter>" "Go to starred messages"
+macro index,pager gd "<change-folder>=[Gmail]/草稿<enter>" "Go to drafts"
