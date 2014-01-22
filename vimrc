@@ -9,15 +9,13 @@ set autoindent
 set ignorecase
 filetype indent on
 set ofu=syntaxcomplete#Complete
-highlight OverLength ctermbg=red ctermfg=white guibg=#592929
-match OverLength /\%81v.\+/
 autocmd BufRead *.py inoremap # X<c-h># 
 set lbr
 set fo+=mB
 set sm
 set mousemodel=popup
 set number
-set incsearch "实时搜索结果
+set incsearch
 set encoding=utf-8
 set fileencodings=ucs-bom,utf-8,utf-16,cp9936,gb18030,big5,euc-jp,euc-kr,latin1
 syntax on
@@ -28,6 +26,8 @@ filetype plugin on
 let g:pydiction_location="~/.vim/vimfiles/pydiction/complete-dict"
 let g:pydiction_menu_height=20
 colorscheme candycode
+autocmd Filetype python highlight OverLength ctermbg=red ctermfg=white guibg=#592929
+autocmd FileType python match OverLength /\%81v.\+/
 "autocmd vimenter * if !argc() | NERDTree | endif
 map <C-n> :NERDTreeToggle<CR>
 vmap <C-c> :w !pbcopy<CR><CR>
