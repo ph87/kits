@@ -7,6 +7,7 @@ set smarttab
 set smartindent
 set autoindent
 set ignorecase
+let Tlist_Ctags_Cmd='/usr/bin/ctags'
 filetype indent on
 set ofu=syntaxcomplete#Complete
 autocmd BufRead *.py inoremap # X<c-h># 
@@ -26,18 +27,22 @@ filetype plugin on
 let g:pydiction_location="~/.vim/vimfiles/pydiction/complete-dict"
 let g:pydiction_menu_height=20
 colorscheme candycode
-autocmd Filetype python highlight OverLength ctermbg=red ctermfg=white guibg=#592929
+"autocmd Filetype python highlight OverLength ctermfg=cyan guibg=#592929 
+autocmd Filetype python highlight OverLength ctermfg=grey guibg=#592929 
 autocmd FileType python match OverLength /\%81v.\+/
 "autocmd vimenter * if !argc() | NERDTree | endif
+"
+"endif
 map <C-n> :NERDTreeToggle<CR>
 vmap <C-c> :w !pbcopy<CR><CR>
 nmap <C-p> :r !pbpaste<CR><CR>
 nmap j gj
 nmap k gk
+nmap U <C-r>
 
 " vim-powerline
 set laststatus=2
-"set nocompatible
+set nocompatible
 set t_Co=256
 "let g:Powerline_symbols = 'fancy'
 let g:Powerline_symbols = 'unicode'
@@ -52,7 +57,6 @@ let g:Powerline_mode_S = ""
 let g:Powerline_mode_cs = ""
 let g:Powerline_symbols_override={ 'LINE': ''}
 
-"set status line
 "hi statusline guibg=DarkGrey ctermfg=8 guifg=White ctermbg=15
 "let NERDTreeStatusline = -1
 
